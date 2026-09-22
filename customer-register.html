@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF7F2;
+    --ink: #22201C;
+    --ink-soft: #746C5F;
+    --line: #E1D9C8;
+    --line-strong: #CDC2AC;
+    --teal: #1F5C4E;
+    --teal-tint: #E4EEEA;
+    --rust: #B5482B;
+    --rust-tint: #F5E5DE;
+    --amber: #93691E;
+    --amber-tint: #F3EAD4;
+    --card: #FFFFFF;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #17150F;
+      --ink: #ECE6D9;
+      --ink-soft: #A69C89;
+      --line: #38321F;
+      --line-strong: #4B4429;
+      --teal: #4E9B87;
+      --teal-tint: #1B2D28;
+      --rust: #D97757;
+      --rust-tint: #33211A;
+      --amber: #D4AE5C;
+      --amber-tint: #322A16;
+      --card: #1E1B13;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #17150F;
+    --ink: #ECE6D9;
+    --ink-soft: #A69C89;
+    --line: #38321F;
+    --line-strong: #4B4429;
+    --teal: #4E9B87;
+    --teal-tint: #1B2D28;
+    --rust: #D97757;
+    --rust-tint: #33211A;
+    --amber: #D4AE5C;
+    --amber-tint: #322A16;
+    --card: #1E1B13;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .num { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 18px 60px; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 5;
+    padding: calc(env(safe-area-inset-top, 0px) + 18px) 18px 14px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .top-inner { max-width: 720px; margin: 0 auto; }
+  .biz-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .biz-name {
+    font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+    background: transparent; border: none; color: var(--ink);
+    padding: 0; width: 100%; font-family: inherit;
+  }
+  .biz-name:focus { outline: none; }
+  .biz-sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+
+  nav.tabs {
+    display: flex; gap: 4px; margin-top: 14px;
+    border: 1px solid var(--line); border-radius: 8px; padding: 3px;
+    width: fit-content;
+  }
+  nav.tabs button {
+    border: none; background: transparent; color: var(--ink-soft);
+    font-family: inherit; font-size: 13.5px; font-weight: 500;
+    padding: 6px 13px; border-radius: 6px; cursor: pointer;
+  }
+  nav.tabs button.active { background: var(--teal); color: #fff; }
+
+  main { padding-top: 20px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Dashboard */
+  .stat-list { border-top: 1px solid var(--line); }
+  .stat-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 13px 2px; border-bottom: 1px solid var(--line);
+  }
+  .stat-row .label { font-size: 14.5px; color: var(--ink-soft); }
+  .stat-row .value { font-size: 19px; font-weight: 600; }
+  .stat-row.total .value { color: var(--teal); font-size: 26px; }
+  .section-title {
+    font-size: 12.5px; text-transform: none; color: var(--ink-soft);
+    margin: 26px 0 8px; font-weight: 500;
+  }
+
+  /* Customer list */
+  .search-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  input[type="text"], input[type="tel"], input[type="date"], select, textarea {
+    font-family: inherit; font-size: 14.5px; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line-strong);
+    border-radius: 7px; padding: 9px 11px; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
+  .search-row input { flex: 1; }
+
+  .btn {
+    font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    border-radius: 7px; padding: 9px 15px; border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .btn-teal { background: var(--teal); color: #fff; }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+  .btn-rust { background: transparent; color: var(--rust); border-color: var(--rust); }
+  .btn-sm { padding: 6px 11px; font-size: 12.5px; }
+
+  ul.reg { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  li.row { border-bottom: 1px solid var(--line); padding: 13px 2px; }
+  .row-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; }
+  .row-main { min-width: 0; }
+  .row-name { font-size: 15.5px; font-weight: 600; }
+  .row-meta { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; position: relative; top: -1px; }
+  .dot.new { background: var(--ink-soft); }
+  .dot.interested { background: var(--amber); }
+  .dot.followup { background: var(--rust); }
+  .dot.customer { background: var(--teal); }
+  .chev { color: var(--ink-soft); font-size: 12px; flex-shrink: 0; }
+
+  .row-detail { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  li.row.open .row-detail { display: block; }
+  .field { margin-bottom: 10px; }
+  .field label { display: block; font-size: 12px; color: var(--ink-soft); margin-bottom: 4px; }
+  .field-row { display: flex; gap: 8px; }
+  .field-row .field { flex: 1; }
+  .detail-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+  .empty { padding: 34px 2px; color: var(--ink-soft); font-size: 14px; text-align: center; }
+
+  /* Follow-ups */
+  .fu-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 2px; border-bottom: 1px solid var(--line); }
+  .fu-name { font-size: 15px; font-weight: 600; }
+  .fu-when { font-size: 12.5px; margin-top: 2px; }
+  .fu-when.over { color: var(--rust); }
+  .fu-when.today { color: var(--amber); }
+
+  /* Add sheet */
+  .sheet-backdrop {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 20;
+  }
+  .sheet-backdrop.open { display: block; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 21;
+    background: var(--card); border-top: 1px solid var(--line-strong);
+    border-radius: 14px 14px 0 0; padding: 18px 18px calc(env(safe-area-inset-bottom, 0px) + 18px);
+    max-height: 86vh; overflow-y: auto;
+    transform: translateY(100%); transition: transform .22s ease;
+  }
+  .sheet-backdrop.open .sheet { transform: translateY(0); }
+  .sheet h2 { font-size: 17px; margin: 0 0 14px; }
+  .sheet-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .sheet-actions .btn { flex: 1; }
+
+  .toast {
+    position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); left: 50%;
+    transform: translateX(-50%) translateY(10px); background: var(--ink); color: var(--paper);
+    padding: 9px 16px; border-radius: 8px; font-size: 13px; opacity: 0; pointer-events: none;
+    transition: all .18s ease; z-index: 30;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .fab {
+    position: fixed; right: 18px; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+    width: 52px; height: 52px; border-radius: 50%; background: var(--teal); color: #fff;
+    border: none; font-size: 26px; line-height: 1; cursor: pointer; z-index: 6;
+    box-shadow: 0 3px 10px rgba(0,0,0,.22);
+  }
+
+  .offline-flag { font-size: 11.5px; color: var(--rust); margin-top: 2px; display: none; }
+  .offline-flag.show { display: block; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="biz-row">
+      <input class="biz-name" id="bizName" value="My Business" spellcheck="false">
+    </div>
+    <div class="biz-sub">Customer register</div>
+    <div class="offline-flag" id="offlineFlag">Not connected — changes only stay in this open tab.</div>
+    <nav class="tabs">
+      <button data-view="dashboard" class="active">Dashboard</button>
+      <button data-view="customers">Customers</button>
+      <button data-view="followups">Follow-ups</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <main>
+
+    <section class="view active" id="view-dashboard">
+      <div class="stat-list">
+        <div class="stat-row total"><span class="label">Total customers</span><span class="value num" id="statTotal">0</span></div>
+        <div class="stat-row"><span class="label">New</span><span class="value num" id="statNew">0</span></div>
+        <div class="stat-row"><span class="label">Interested</span><span class="value num" id="statInterested">0</span></div>
+        <div class="stat-row"><span class="label">Follow-up</span><span class="value num" id="statFollowup">0</span></div>
+        <div class="stat-row"><span class="label">Customer</span><span class="value num" id="statCustomer">0</span></div>
+      </div>
+      <div class="section-title">Due or overdue today</div>
+      <ul class="reg" id="dashFollowups"></ul>
+      <button class="btn btn-ghost" id="exportBtn" style="margin-top:22px;width:100%">Export as CSV</button>
+    </section>
+
+    <section class="view" id="view-customers">
+      <div class="search-row">
+        <input type="text" id="searchBox" placeholder="Search by name or phone">
+      </div>
+      <ul class="reg" id="customerList"></ul>
+    </section>
+
+    <section class="view" id="view-followups">
+      <div id="followupList"></div>
+    </section>
+
+  </main>
+</div>
+
+<button class="fab" id="fabAdd" title="Add customer">+</button>
+
+<div class="sheet-backdrop" id="addBackdrop">
+  <div class="sheet">
+    <h2>Add customer</h2>
+    <div class="field"><label>Name</label><input type="text" id="addName"></div>
+    <div class="field"><label>Phone (10 digits)</label><input type="tel" id="addPhone" maxlength="10"></div>
+    <div class="field-row">
+      <div class="field"><label>Status</label>
+        <select id="addStatus">
+          <option>New</option><option>Interested</option><option>Follow-up</option><option>Customer</option>
+        </select>
+      </div>
+      <div class="field"><label>Follow-up date</label><input type="date" id="addFollowup"></div>
+    </div>
+    <div class="field"><label>Notes</label><textarea id="addNotes" rows="2"></textarea></div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" id="addCancel">Cancel</button>
+      <button class="btn btn-teal" id="addSave">Save customer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var db = null, downloads = null;
+  var customers = []; // {id, name, phone, status, notes, followup_date}
+  var bizNameEl = document.getElementById('bizName');
+  var offlineFlag = document.getElementById('offlineFlag');
+
+  function toast(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function fmtDate(s){
+    if(!s) return '';
+    var parts = s.split('-');
+    if(parts.length !== 3) return s;
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return parseInt(parts[2],10) + ' ' + months[parseInt(parts[1],10)-1] + ' ' + parts[0];
+  }
+
+  function statusClass(s){
+    s = (s||'').toLowerCase();
+    if(s === 'interested') return 'interested';
+    if(s === 'follow-up' || s === 'followup') return 'followup';
+    if(s === 'customer') return 'customer';
+    return 'new';
+  }
+
+  // ---------- render ----------
+  function render(){
+    renderDashboard();
+    renderCustomers();
+    renderFollowups();
+  }
+
+  function renderDashboard(){
+    var counts = {New:0, Interested:0, 'Follow-up':0, Customer:0};
+    customers.forEach(function(c){
+      var s = c.status;
+      if(counts.hasOwnProperty(s)) counts[s]++;
+    });
+    document.getElementById('statTotal').textContent = customers.length;
+    document.getElementById('statNew').textContent = counts['New'];
+    document.getElementById('statInterested').textContent = counts['Interested'];
+    document.getElementById('statFollowup').textContent = counts['Follow-up'];
+    document.getElementById('statCustomer').textContent = counts['Customer'];
+
+    var today = todayStr();
+    var dueToday = customers.filter(function(c){ return c.followup_date && c.followup_date <= today; });
+    var list = document.getElementById('dashFollowups');
+    list.innerHTML = '';
+    if(dueToday.length === 0){
+      list.innerHTML = '<div class="empty">Nothing due today.</div>';
+    } else {
+      dueToday.forEach(function(c){ list.appendChild(followupRow(c)); });
+    }
+  }
+
+  function customerRow(c){
+    var li = document.createElement('li');
+    li.className = 'row';
+    var head = document.createElement('div');
+    head.className = 'row-head';
+    head.innerHTML =
+      '<div class="row-main">' +
+        '<div class="row-name"><span class="dot ' + statusClass(c.status) + '"></span>' + escapeHtml(c.name) + '</div>' +
+        '<div class="row-meta num">' + escapeHtml(c.phone) + ' &middot; ' + escapeHtml(c.status) +
+        (c.followup_date ? ' &middot; follow up ' + fmtDate(c.followup_date) : '') + '</div>' +
+      '</div><div class="chev">&#9662;</div>';
+    head.onclick = function(){ li.classList.toggle('open'); };
+
+    var detail = document.createElement('div');
+    detail.className = 'row-detail';
+    detail.innerHTML =
+      '<div class="field"><label>Name</label><input type="text" class="e-name" value="' + escapeAttr(c.name) + '"></div>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>Phone</label><input type="tel" class="e-phone" maxlength="10" value="' + escapeAttr(c.phone) + '"></div>' +
+        '<div class="field"><label>Status</label><select class="e-status">' +
+          ['New','Interested','Follow-up','Customer'].map(function(s){
+            return '<option' + (s===c.status?' selected':'') + '>' + s + '</option>';
+          }).join('') +
+        '</select></div>' +
+      '</div>' +
+      '<div class="field"><label>Follow-up date</label><input type="date" class="e-followup" value="' + escapeAttr(c.followup_date||'') + '"></div>' +
+      '<div class="field"><label>Notes</label><textarea class="e-notes" rows="2">' + escapeHtml(c.notes||'') + '</textarea></div>' +
+      '<div class="detail-actions">' +
+        '<button class="btn btn-rust btn-sm e-delete">Delete</button>' +
+        '<button class="btn btn-teal btn-sm e-save">Save changes</button>' +
+      '</div>';
+
+    detail.querySelector('.e-save').onclick = function(e){
+      e.stopPropagation();
+      var name = detail.querySelector('.e-name').value.trim();
+      var phone = detail.querySelector('.e-phone').value.trim();
+      var status = detail.querySelector('.e-status').value;
+      var followup = detail.querySelector('.e-followup').value;
+      var notes = detail.querySelector('.e-notes').value.trim();
+      if(!name){ toast('Name required'); return; }
+      if(!/^\d{10}$/.test(phone)){ toast('Phone must be 10 digits'); return; }
+      var dupe = customers.find(function(o){ return o.phone === phone && o.id !== c.id; });
+      if(dupe){ toast('That phone number is already used'); return; }
+      saveCustomer(Object.assign({}, c, {name:name, phone:phone, status:status, followup_date:followup, notes:notes}));
+    };
+    detail.querySelector('.e-delete').onclick = function(e){
+      e.stopPropagation();
+      if(confirm('Delete ' + c.name + '?')) deleteCustomer(c);
+    };
+
+    li.appendChild(head);
+    li.appendChild(detail);
+    return li;
+  }
+
+  function followupRow(c){
+    var li = document.createElement('li');
+    li.className = 'row';
+    var today = todayStr();
+    var cls = c.followup_date < today ? 'over' : (c.followup_date === today ? 'today' : '');
+    var label = c.followup_date < today ? 'Overdue' : 'Due today';
+    li.innerHTML =
+      '<div class="fu-row" style="border:none;padding:0">' +
+        '<div><div class="fu-name">' + escapeHtml(c.name) + '</div>' +
+          '<div class="fu-when ' + cls + '">' + label + ' &middot; ' + fmtDate(c.followup_date) + '</div></div>' +
+        '<div class="row-meta num">' + escapeHtml(c.phone) + '</div>' +
+      '</div>';
+    li.style.borderBottom = '1px solid var(--line)';
+    li.style.padding = '13px 2px';
+    return li;
+  }
+
+  function renderCustomers(){
+    var q = (document.getElementById('searchBox').value || '').toLowerCase().trim();
+    var list = document.getElementById('customerList');
+    list.innerHTML = '';
+    var filtered = customers.filter(function(c){
+      if(!q) return true;
+      return c.name.toLowerCase().indexOf(q) !== -1 || c.phone.indexOf(q) !== -1;
+    }).sort(function(a,b){ return a.name.localeCompare(b.name); });
+    if(filtered.length === 0){
+      list.innerHTML = '<div class="empty">' + (customers.length===0 ? 'No customers yet. Tap + to add one.' : 'No matches.') + '</div>';
+      return;
+    }
+    filtered.forEach(function(c){ list.appendChild(customerRow(c)); });
+  }
+
+  function renderFollowups(){
+    var today = todayStr();
+    var due = customers.filter(function(c){ return c.followup_date; })
+      .sort(function(a,b){ return a.followup_date.localeCompare(b.followup_date); });
+    var container = document.getElementById('followupList');
+    container.innerHTML = '';
+    if(due.length === 0){
+      container.innerHTML = '<div class="empty">No follow-up dates set.</div>';
+      return;
+    }
+    var overdue = due.filter(function(c){ return c.followup_date < today; });
+    var todayList = due.filter(function(c){ return c.followup_date === today; });
+    var upcoming = due.filter(function(c){ return c.followup_date > today; });
+
+    function section(title, arr){
+      if(arr.length === 0) return;
+      var h = document.createElement('div');
+      h.className = 'section-title'; h.textContent = title;
+      container.appendChild(h);
+      var ul = document.createElement('ul'); ul.className = 'reg'; ul.style.borderTop = '1px solid var(--line)';
+      arr.forEach(function(c){ ul.appendChild(followupRow(c)); });
+      container.appendChild(ul);
+    }
+    section('Overdue', overdue);
+    section('Due today', todayList);
+    section('Upcoming', upcoming);
+  }
+
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  // ---------- persistence ----------
+  function loadFallback(){
+    try {
+      var raw = localStorage.getItem('reg_customers');
+      customers = raw ? JSON.parse(raw) : [];
+      var name = localStorage.getItem('reg_bizname');
+      if(name) bizNameEl.value = name;
+    } catch(e){ customers = []; }
+    render();
+  }
+  function saveFallback(){
+    try { localStorage.setItem('reg_customers', JSON.stringify(customers)); } catch(e){}
+  }
+
+  function saveCustomer(c){
+    if(!c.id) c.id = 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+    if(db){
+      db.doc('customers/' + c.id).set(c).then(function(){
+        toast('Saved');
+      }).catch(function(){ toast('Could not save'); });
+    } else {
+      var idx = customers.findIndex(function(o){ return o.id === c.id; });
+      if(idx === -1) customers.push(c); else customers[idx] = c;
+      saveFallback(); render(); toast('Saved');
+    }
+    closeSheet();
+    document.querySelectorAll('li.row.open').forEach(function(li){ li.classList.remove('open'); });
+  }
+
+  function deleteCustomer(c){
+    if(db){
+      db.doc('customers/' + c.id).delete().then(function(){ toast('Deleted'); }).catch(function(){ toast('Could not delete'); });
+    } else {
+      customers = customers.filter(function(o){ return o.id !== c.id; });
+      saveFallback(); render(); toast('Deleted');
+    }
+  }
+
+  // ---------- add sheet ----------
+  var backdrop = document.getElementById('addBackdrop');
+  function openSheet(){
+    document.getElementById('addName').value = '';
+    document.getElementById('addPhone').value = '';
+    document.getElementById('addStatus').value = 'New';
+    document.getElementById('addFollowup').value = '';
+    document.getElementById('addNotes').value = '';
+    backdrop.classList.add('open');
+  }
+  function closeSheet(){ backdrop.classList.remove('open'); }
+  document.getElementById('fabAdd').onclick = openSheet;
+  document.getElementById('addCancel').onclick = closeSheet;
+  backdrop.onclick = function(e){ if(e.target === backdrop) closeSheet(); };
+  document.getElementById('addSave').onclick = function(){
+    var name = document.getElementById('addName').value.trim();
+    var phone = document.getElementById('addPhone').value.trim();
+    var status = document.getElementById('addStatus').value;
+    var followup = document.getElementById('addFollowup').value;
+    var notes = document.getElementById('addNotes').value.trim();
+    if(!name){ toast('Enter a name'); return; }
+    if(!/^\d{10}$/.test(phone)){ toast('Phone must be 10 digits'); return; }
+    if(customers.some(function(o){ return o.phone === phone; })){ toast('Customer already exists'); return; }
+    saveCustomer({name:name, phone:phone, status:status, followup_date:followup, notes:notes});
+  };
+
+  // ---------- tabs ----------
+  document.querySelectorAll('nav.tabs button').forEach(function(btn){
+    btn.onclick = function(){
+      document.querySelectorAll('nav.tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+      document.getElementById('view-' + btn.dataset.view).classList.add('active');
+    };
+  });
+  document.getElementById('searchBox').addEventListener('input', renderCustomers);
+
+  // ---------- business name ----------
+  bizNameEl.addEventListener('change', function(){
+    var name = bizNameEl.value.trim() || 'My Business';
+    bizNameEl.value = name;
+    if(db){ db.doc('settings/info').set({name:name}).catch(function(){}); }
+    else { try{ localStorage.setItem('reg_bizname', name); }catch(e){} }
+  });
+
+  // ---------- export ----------
+  document.getElementById('exportBtn').onclick = function(){
+    var rows = [['Name','Phone','Status','Notes','Follow-up date']];
+    customers.forEach(function(c){ rows.push([c.name, c.phone, c.status, c.notes||'', c.followup_date||'']); });
+    var csv = rows.map(function(r){
+      return r.map(function(v){ return '"' + String(v).replace(/"/g,'""') + '"'; }).join(',');
+    }).join('\n');
+    if(downloads){
+      downloads.save({filename:'customers.csv', data:csv}).catch(function(){ toast('Could not save file'); });
+    } else {
+      toast('Downloads not available here');
+    }
+  };
+
+  // ---------- init ----------
+  async function init(){
+    try {
+      db = (window.claude && window.claude.use) ? await window.claude.use('db') : null;
+    } catch(e){ db = null; }
+    try {
+      downloads = (window.claude && window.claude.use) ? await window.claude.use('downloads') : null;
+    } catch(e){ downloads = null; }
+
+    if(db){
+      offlineFlag.classList.remove('show');
+      db.doc('settings/info').get().then(function(doc){
+        if(doc && doc.data && doc.data.name) bizNameEl.value = doc.data.name;
+      }).catch(function(){});
+      db.collection('customers').onSnapshot(function(snap){
+        customers = snap.docs.map(function(d){ var v = d.data(); v.id = d.id; return v; });
+        render();
+      }, function(){ /* on error just keep last state */ });
+    } else {
+      offlineFlag.classList.add('show');
+      loadFallback();
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
